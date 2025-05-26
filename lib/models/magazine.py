@@ -53,3 +53,22 @@ class Magazine:
         """, (self.id,))
         rows = cursor.fetchall()
         return [Author(*row[:2]) for row in rows]  # Only (id, name) needed
+
+    def top_publisher(self):
+        from lib.models.author import Author
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+        SELECT authors.id, authors.name, COUNT(articles.id) as article_count
+        FROM authors
+        JOIN articles ON authors.id = articles.author_id
+        WHERE articles.magazine_id = ?
+        GROUP BY authors.id
+        ORDER BY article_count DESC
+        LIMIT 1
+        """, (self.id,))
+        row = cursor.fetchone()
+        conn.close()
+        if row:
+            return Author(id=row[0], name=row[1])
+        return None

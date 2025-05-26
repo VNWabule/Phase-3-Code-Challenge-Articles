@@ -3,7 +3,6 @@ from lib.models.article import Article
 from lib.db.connection import get_connection
 
 def setup_function():
-    # Reset and seed the database before each test
     conn = get_connection()
     cursor = conn.cursor()
     cursor.executescript("""
@@ -39,7 +38,6 @@ def setup_function():
 
 
 def teardown_function():
-    # Optional: clean up after tests if needed
     conn = get_connection()
     cursor = conn.cursor()
     cursor.executescript("""
@@ -65,9 +63,6 @@ def test_article_author_and_magazine():
     assert article.magazine().name == "Tech Today"
 
 def test_pytest_usage():
-    # Explicit use of pytest to avoid 'imported but unused' warning
     with pytest.raises(AttributeError):
-        # This is a dummy test to show usage of pytest.raises
-        # Trying to call a method that does not exist should raise AttributeError
         article = Article.find_by_id(1)
         article.non_existent_method()

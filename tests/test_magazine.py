@@ -58,10 +58,16 @@ def test_contributing_authors():
     contributors = mag.contributing_authors()
     names = [a.name for a in contributors]
     assert "Bob" in names
-    assert "Alice" not in names  # Alice wrote only 2 articles, Bob more than 2
+    assert "Alice" not in names 
+
+def test_top_publisher():
+    mag = Magazine.find_by_id(1)
+    top_author = mag.top_publisher()
+    assert top_author.name == "Bob"
+    assert isinstance(top_author, Author)
+
 
 def test_pytest_usage():
-    # Prevent "imported but unused" warning for pytest
     with pytest.raises(AttributeError):
         mag = Magazine.find_by_id(1)
         mag.non_existent_method()

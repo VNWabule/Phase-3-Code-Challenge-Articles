@@ -58,7 +58,6 @@ def test_topic_areas():
     assert set(topics) == {"Technology", "Health"}
 
 def test_pytest_usage():
-    # Use pytest to avoid 'imported but unused' warning
     with pytest.raises(AttributeError):
         author = Author.find_by_id(1)
         author.non_existent_method()
