@@ -4,7 +4,6 @@ def run():
     conn = sqlite3.connect('articles.db')
     cursor = conn.cursor()
 
-    # Create tables if they don't exist
     cursor.executescript("""
     CREATE TABLE IF NOT EXISTS authors (
         id INTEGER PRIMARY KEY,
@@ -27,7 +26,6 @@ def run():
     );
     """)
 
-    # Clear existing data and insert seed data
     cursor.executescript("""
     DELETE FROM articles;
     DELETE FROM magazines;
@@ -40,7 +38,6 @@ def run():
 
     conn.commit()
 
-    # Verify by selecting articles
     cursor.execute("SELECT id, title, author_id, magazine_id FROM articles;")
     articles = cursor.fetchall()
 

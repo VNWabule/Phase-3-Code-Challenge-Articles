@@ -1,10 +1,7 @@
-# lib/debug.py
-
 import os
 import sqlite3
 
 def debug():
-    # Locate the database in the project root
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     db_path = os.path.join(project_root, "articles.db")
 

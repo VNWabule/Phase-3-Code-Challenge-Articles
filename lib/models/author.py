@@ -1,10 +1,19 @@
-# lib/models/author.py
 from lib.db.connection import get_connection
 
 class Author:
     def __init__(self, id, name):
         self.id = id
         self.name = name
+
+    @classmethod
+    def all(cls):
+        conn = get_connection()
+        cursor = conn.cursor()
+        rows = cursor.execute("SELECT * FROM authors").fetchall()
+        return [cls(id=row[0], name=row[1]) for row in rows]
+    
+    def __repr__(self):
+        return f"<Author {self.id}: {self.name}>"
 
     @classmethod
     def find_by_id(cls, id):

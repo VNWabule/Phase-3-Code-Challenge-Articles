@@ -1,4 +1,3 @@
-# lib/models/magazine.py
 from lib.db.connection import get_connection
 
 class Magazine:
@@ -6,6 +5,16 @@ class Magazine:
         self.id = id
         self.name = name
         self.category = category
+
+    @classmethod
+    def all(cls):
+        conn = get_connection()
+        cursor = conn.cursor()
+        rows = cursor.execute("SELECT * FROM magazines").fetchall()
+        return [cls(id=row[0], name=row[1], category=row[2]) for row in rows]
+
+    def __repr__(self):
+        return f"<Magazine {self.id}: {self.name} ({self.category})>"
 
     @classmethod
     def find_by_id(cls, id):
@@ -52,7 +61,7 @@ class Magazine:
             HAVING article_count > 2
         """, (self.id,))
         rows = cursor.fetchall()
-        return [Author(*row[:2]) for row in rows]  # Only (id, name) needed
+        return [Author(*row[:2]) for row in rows]
 
     def top_publisher(self):
         from lib.models.author import Author
