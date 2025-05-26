@@ -33,3 +33,16 @@ This project models a publishing system with Articles, Authors, and Magazines us
 5. **View Database Content**
     ```bash
     python lib/debug.py
+
+---
+
+## How to Access the CLI
+
+1. Make sure you've seeded the database before using the CLI
+   ```bash
+   python lib/db/seed.py
+2. Run the CLI tool using the -m flag
+   ```bash
+   python -m lib.cli
+
+   
