@@ -1,7 +1,7 @@
 from lib.db.connection import get_connection
 
 class Author:
-    def __init__(self, id, name):
+    def __init__(self, id=None, name=None):
         self.id = id
         self.name = name
 
@@ -62,3 +62,30 @@ class Author:
             WHERE a.author_id = ?
         """, (self.id,))
         return [row[0] for row in cursor.fetchall()]
+    
+    @classmethod
+    def find_by_name(cls, name):
+        conn = get_connection()
+        cursor = conn.cursor()
+        row = cursor.execute("SELECT * FROM authors WHERE name = ?", (name,)).fetchone()
+        if row:
+            return cls(id=row[0], name=row[1])
+        return None
+    
+    @classmethod
+    def top_author(cls):
+        conn = get_connection()
+        cursor = conn.cursor()
+        row = cursor.execute("""
+            SELECT authors.*, COUNT(articles.id) as article_count
+            FROM authors
+            JOIN articles ON authors.id = articles.author_id
+            GROUP BY authors.id
+            ORDER BY article_count DESC
+            LIMIT 1
+        """).fetchone()
+        if row:
+            return cls(id=row[0], name=row[1])
+        return None
+
+

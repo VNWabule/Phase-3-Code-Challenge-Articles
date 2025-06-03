@@ -81,3 +81,34 @@ class Magazine:
         if row:
             return Author(id=row[0], name=row[1])
         return None
+    
+    @classmethod
+    def find_by_category(cls, category):
+        conn = get_connection()
+        cursor = conn.cursor()
+        rows = cursor.execute("SELECT * FROM magazines WHERE category = ?", (category,)).fetchall()
+        return [cls(id=row[0], name=row[1], category=row[2]) for row in rows]
+    
+    @classmethod
+    def with_multiple_authors(cls):
+        conn = get_connection()
+        cursor = conn.cursor()
+        rows = cursor.execute("""
+            SELECT m.*, COUNT(DISTINCT a.author_id) as author_count
+            FROM articles a
+            JOIN magazines m ON a.magazine_id = m.id
+            GROUP BY m.id
+            HAVING author_count > 1
+        """).fetchall()
+        return [cls(id=row[0], name=row[1], category=row[2]) for row in rows]
+    
+    def article_counts(self):
+        conn = get_connection()
+        cursor = conn.cursor()
+        row = cursor.execute("""
+            SELECT COUNT(*) FROM articles WHERE magazine_id = ?
+        """, (self.id,)).fetchone()
+        return row[0] if row else 0
+
+
+
